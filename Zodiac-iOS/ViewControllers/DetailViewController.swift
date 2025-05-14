@@ -13,10 +13,15 @@ class DetailViewController: UIViewController {
     
     var horoscope: Horoscope!
     
+    var isFavorite = false
+    
     // MARK: Outlets
     
     @IBOutlet weak var signImageView: UIImageView!
     @IBOutlet weak var datesLabel: UILabel!
+    
+    @IBOutlet weak var favoriteMenu: UIBarButtonItem!
+
     
     // MARK: Lifecycle
     
@@ -27,6 +32,23 @@ class DetailViewController: UIViewController {
         self.navigationItem.title = horoscope.name
         signImageView.image = horoscope.image
         datesLabel.text = horoscope.dates
+        
+        isFavorite = SessionManager().isFavorite(id: horoscope.id)
+        setFavoriteIcon()
+    }
+    
+    func setFavoriteIcon() {
+        if isFavorite {
+            favoriteMenu.image = UIImage(systemName: "heart.fill")
+        } else {
+            favoriteMenu.image = UIImage(systemName: "heart")
+        }
     }
 
+    @IBAction func setFavorite(_ sender: Any) {
+        isFavorite = !isFavorite
+        SessionManager().setFavorite(id: isFavorite ? horoscope.id : "")
+        setFavoriteIcon()
+    }
+    
 }

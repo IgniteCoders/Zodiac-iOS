@@ -30,6 +30,12 @@ class ListViewController: UIViewController, UITableViewDataSource, UISearchBarDe
         self.navigationItem.searchController = searchController
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
+    }
+    
     // MARK: Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

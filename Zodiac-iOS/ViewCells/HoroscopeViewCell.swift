@@ -12,11 +12,13 @@ class HoroscopeViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var datesLabel: UILabel!
     @IBOutlet weak var signImageView: UIImageView!
+    @IBOutlet weak var favoriteImageView: UIImageView!
     
     func render(horoscope: Horoscope) {
         nameLabel.text = horoscope.name
         datesLabel.text = horoscope.dates
         signImageView.image = horoscope.image
+        favoriteImageView.isHidden = !SessionManager().isFavorite(id: horoscope.id)
     }
 
     override func awakeFromNib() {
