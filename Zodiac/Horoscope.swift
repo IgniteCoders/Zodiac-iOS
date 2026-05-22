@@ -17,7 +17,7 @@ struct Horoscope {
     }
     
     
-    static let getAll: [Horoscope] = [
+    static private let list: [Horoscope] = [
         Horoscope(id: "aries", name: "Aries", dates: "21 March - 19 April"),
         Horoscope(id: "taurus", name: "Taurus", dates: "20 April - 20 May"),
         Horoscope(id: "gemini", name: "Gemini", dates: "21 May - 20 June"),
@@ -31,5 +31,9 @@ struct Horoscope {
         Horoscope(id: "aquarius", name: "Aquarius", dates: "20 January - 18 February"),
         Horoscope(id: "pisces", name: "Pisces", dates: "19 February - 20 March"),
     ]
+    
+    static func getAll() -> [Horoscope] {
+        return list
+    }
         
 }
