@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController, UITableViewDataSource {
+class MainViewController: UIViewController, UITableViewDataSource, UISearchBarDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -18,6 +18,10 @@ class MainViewController: UIViewController, UITableViewDataSource {
         // Do any additional setup after loading the view.
         
         tableView.dataSource = self
+        
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.delegate = self
+        navigationItem.searchController = searchController
     }
 
     // Cuantos elementos hay que listar
@@ -31,6 +35,23 @@ class MainViewController: UIViewController, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Horoscope Cell", for: indexPath) as! HoroscopeViewCell
         cell.render(horoscope: horoscope)
         return cell
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        horoscopeList = if searchText.isEmpty {
+            Horoscope.getAll()
+        } else {
+            Horoscope.getAll().filter({ horoscope in
+                horoscope.name.lowercased().contains(searchText.lowercased()) ||
+                horoscope.dates.lowercased().contains(searchText.lowercased())
+            })
+        }
+        tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        horoscopeList = Horoscope.getAll()
+        tableView.reloadData()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
