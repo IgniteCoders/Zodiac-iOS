@@ -23,6 +23,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UISearchBarDe
         searchController.searchBar.delegate = self
         navigationItem.searchController = searchController
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        tableView.reloadData()
+    }
 
     // Cuantos elementos hay que listar
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
