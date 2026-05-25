@@ -10,12 +10,20 @@ import UIKit
 class DetailViewController: UIViewController {
     
     var horoscope: Horoscope!
+    
+    @IBOutlet weak var horoscopeImageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var datesLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         navigationItem.title = horoscope.name
+        
+        nameLabel.text = horoscope.name
+        datesLabel.text = horoscope.dates
+        horoscopeImageView.image = horoscope.getImage()
     }
     
 
