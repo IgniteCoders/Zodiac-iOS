@@ -17,9 +17,14 @@ class DetailViewController: UIViewController {
 
     @IBOutlet weak var favoriteMenuItem: UIBarButtonItem!
     
+    @IBOutlet weak var predictionTextView: UITextView!
+    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    
     let session = SessionManager()
     
     var isFavorite = false
+    
+    var prediction: String? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +38,8 @@ class DetailViewController: UIViewController {
         
         isFavorite = session.isFavoriteHoroscope(id: horoscope.id)
         setFavoriteIcon ()
+        
+        getPrediction(period: "daily")
     }
     
     func setFavoriteIcon () {
@@ -54,17 +61,43 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func shareMenuClicked(_ sender: Any) {
-        // text to share
-        let text = "This is some text that I want to share."
-        
-        // set up activity view controller
-        let textToShare = [ text ]
-        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-        
-        // present the view controller
-        self.present(activityViewController, animated: true, completion: nil)
+        if let prediction = prediction {
+            // set up activity view controller
+            let textToShare = [ prediction ]
+            let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+            
+            // present the view controller
+            self.present(activityViewController, animated: true, completion: nil)
+        }
     }
+    
+    @IBAction func periodChanged(_ sender: UISegmentedControl) {
+        var period = switch sender.selectedSegmentIndex {
+        case 0:  // Daily
+            "daily"
+        case 1:  // Weekly
+            "weekly"
+        default: // Monthly
+            "monthly"
+        }
+        getPrediction(period: period)
+    }
+    
+    func getPrediction(period: String) {
+        self.predictionTextView.text = "Consultando con las estrellas..."
+        self.loadingView.isHidden = false
+        Task {
+            self.prediction = await HoroscopeApi.getPrediction(forSign: horoscope.id, withPeriod: period)
+            
+            DispatchQueue.main.async {
+                self.predictionTextView.text = self.prediction
+                self.loadingView.isHidden = true
+            }
+        }
+    }
+    
+    
     /*
     // MARK: - Navigation
 
